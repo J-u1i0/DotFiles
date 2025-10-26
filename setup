@@ -1,0 +1,35 @@
+#!/bin/bash
+
+
+# ============================================================================ #
+# VARIABLES
+# ============================================================================ #
+
+BIN="$HOME/.dotfiles_bin"
+
+# Dotfiles
+TMUX_CONF="$HOME/.tmux.conf"
+MY_TMUX_CONF_ORIGINAL="./tmux.conf"
+MY_TMUX_CONF="${BIN}/tmux.conf"
+
+# Git directories
+TMUX_SENSIBLE="${BIN}/tmux-sensible"
+TMUX_YANK="${BIN}/tmux-yank"
+
+
+# ============================================================================ #
+# MAIN
+# ============================================================================ #
+
+# Delete directories and files
+rm -rf ${BIN}
+rm -f ${TMUX_CONF}
+
+# Create directories and files
+mkdir ${BIN}
+cp ${MY_TMUX_CONF_ORIGINAL} ${MY_TMUX_CONF}
+
+# Setup TMUX configuration files
+git clone https://github.com/tmux-plugins/tmux-sensible.git ${TMUX_SENSIBLE}
+git clone https://github.com/tmux-plugins/tmux-yank ${TMUX_YANK}
+ln -s ${MY_TMUX_CONF} ${TMUX_CONF}
