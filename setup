@@ -1,5 +1,9 @@
 #!/bin/bash
 
+function is_osx() {
+    local platform=$(uname)
+    [ "$platform" == "Darwin" ]
+}
 
 # ============================================================================ #
 # VARIABLES
@@ -22,7 +26,6 @@ TMUX_YANK="${BIN}/tmux-yank"
 # ============================================================================ #
 
 # Delete directories and files
-rm -rf ${BIN}
 rm -f ${TMUX_CONF}
 
 # Create directories and files
@@ -30,6 +33,23 @@ mkdir ${BIN}
 cp ${MY_TMUX_CONF_ORIGINAL} ${MY_TMUX_CONF}
 
 # Setup TMUX configuration files
-git clone https://github.com/tmux-plugins/tmux-sensible.git ${TMUX_SENSIBLE}
-git clone https://github.com/tmux-plugins/tmux-yank ${TMUX_YANK}
+if [ -d "${TMUX_SENSIBLE}" ]; then
+    echo "tmux-sensible already installed ..."
+else
+    git clone https://github.com/tmux-plugins/tmux-sensible.git ${TMUX_SENSIBLE}
+fi
+if [ -d "${TMUX_YANK}" ]; then
+    echo "tmux-yank already installed ..."
+else
+    git clone https://github.com/tmux-plugins/tmux-yank ${TMUX_YANK}
+fi
 ln -s ${MY_TMUX_CONF} ${TMUX_CONF}
+
+# Miscellaneous modules
+if is_osx; then
+    brew install ripgrep
+fi
+if is_osx; then
+    brew install fzf
+    $(brew --prefix fzf)/install --all
+fi
