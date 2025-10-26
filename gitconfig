@@ -1,0 +1,24 @@
+# This is Git's per-user configuration file.
+[user]
+# Please adapt and uncomment the following lines:
+	name = J-u1i0
+	email = Julio.Castillejo.Motta@gmail.com
+[color]
+    ui = always
+[core]
+    editor = nvim
+[merge]
+    tool = vimdiff
+    conflictstyle = diff3
+[mergetool]
+	keepBackup = false
+    prompt = false
+[alias]
+    uncommit = reset --soft HEAD~
+    rbmain = rebase main
+    mgmain = merge main
+    last = log - 1 HEAD
+    amend = commit --amend
+    co = checkout
+    s = status
+    cm = commit # Open nvim to add a detailed commit message.

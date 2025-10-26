@@ -1,10 +1,5 @@
 #!/bin/bash
 
-function is_osx() {
-    local platform=$(uname)
-    [ "$platform" == "Darwin" ]
-}
-
 # ============================================================================ #
 # VARIABLES
 # ============================================================================ #
@@ -12,38 +7,64 @@ function is_osx() {
 BIN="$HOME/.dotfiles_bin"
 
 # Dotfiles
-TMUX_CONF="$HOME/.tmux.conf"
-MY_TMUX_CONF_ORIGINAL="./tmux.conf"
-MY_TMUX_CONF="${BIN}/tmux.conf"
+TMUX_CONF_SYM="$HOME/.tmux.conf"
+MY_TMUX_CONF="./tmux.conf"
+
+GIT_CONF_SYM="$HOME/.gitconfig"
+MY_GIT_CONF="./gitconfig"
 
 # Git directories
-TMUX_SENSIBLE="${BIN}/tmux-sensible"
-TMUX_YANK="${BIN}/tmux-yank"
+TMUX_SENSIBLE="tmux-sensible"
+TMUX_SENSIBLE_LINK="https://github.com/tmux-plugins/tmux-sensible.git"
 
+TMUX_YANK="tmux-yank"
+TMUX_YANK_LINK="https://github.com/tmux-plugins/tmux-yank.git"
+
+# ============================================================================ #
+# FUNCTIONS
+# ============================================================================ #
+
+function is_osx() {
+    local platform=$(uname)
+    [ "$platform" == "Darwin" ]
+}
+
+function add_sym_link() {
+    local src="$1"
+    local dest="$2"
+    rm -f ${dest}
+    local dotfiles_dest="${BIN}/${src}"
+    cp ${src} ${dotfiles_dest}
+    ln -s ${dotfiles_dest} ${dest}
+}
+
+function add_git_repo() {
+    local repo="$1"
+    local repo_link="$2"
+    repo_path="${BIN}/${repo}"
+    if [ -d "${repo_path}" ]; then
+        echo "${repo} already installed ..."
+    else
+        git clone ${repo_link} ${repo_path}
+    fi
+}
 
 # ============================================================================ #
 # MAIN
 # ============================================================================ #
 
-# Delete directories and files
-rm -f ${TMUX_CONF}
-
 # Create directories and files
-mkdir ${BIN}
-cp ${MY_TMUX_CONF_ORIGINAL} ${MY_TMUX_CONF}
+if [ ! -d ${BIN} ]; then
+    mkdir ${BIN}
+fi
 
 # Setup TMUX configuration files
-if [ -d "${TMUX_SENSIBLE}" ]; then
-    echo "tmux-sensible already installed ..."
-else
-    git clone https://github.com/tmux-plugins/tmux-sensible.git ${TMUX_SENSIBLE}
-fi
-if [ -d "${TMUX_YANK}" ]; then
-    echo "tmux-yank already installed ..."
-else
-    git clone https://github.com/tmux-plugins/tmux-yank ${TMUX_YANK}
-fi
-ln -s ${MY_TMUX_CONF} ${TMUX_CONF}
+add_git_repo ${TMUX_YANK} ${TMUX_YANK_LINK}
+add_git_repo ${TMUX_SENSIBLE} ${TMUX_SENSIBLE_LINK}
+
+# Symbolic links
+add_sym_link ${MY_TMUX_CONF} ${TMUX_CONF_SYM}
+add_sym_link ${MY_GIT_CONF} ${GIT_CONF_SYM}
 
 # Miscellaneous modules
 if is_osx; then
