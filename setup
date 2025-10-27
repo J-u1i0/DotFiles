@@ -13,6 +13,9 @@ MY_TMUX_CONF="./tmux.conf"
 GIT_CONF_SYM="$HOME/.gitconfig"
 MY_GIT_CONF="./gitconfig"
 
+ZSH_CONF_SYM="$HOME/.zshrc"
+MY_ZSH_CONF="./zshrc"
+
 # Git directories
 TMUX_SENSIBLE="tmux-sensible"
 TMUX_SENSIBLE_LINK="https://github.com/tmux-plugins/tmux-sensible.git"
@@ -65,6 +68,7 @@ add_git_repo ${TMUX_SENSIBLE} ${TMUX_SENSIBLE_LINK}
 # Symbolic links
 add_sym_link ${MY_TMUX_CONF} ${TMUX_CONF_SYM}
 add_sym_link ${MY_GIT_CONF} ${GIT_CONF_SYM}
+add_sym_link ${MY_ZSH_CONF} ${ZSH_CONF_SYM}
 
 # Miscellaneous modules
 if is_osx; then
@@ -74,3 +78,4 @@ if is_osx; then
     brew install fzf
     $(brew --prefix fzf)/install --all
 fi
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
